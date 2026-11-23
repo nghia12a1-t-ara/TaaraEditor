@@ -1,0 +1,66 @@
+# Builds the Windows installer and publishes it to a GitHub Release, together
+# with the signed update bundle and latest.json used by the in-app updater.
+#
+# Release steps:
+#   1. node scripts/version.mjs set X.Y.Z, commit
+#   2. git tag vX.Y.Z && git push origin vX.Y.Z
+#   3. This workflow creates a DRAFT release; review it and click "Publish".
+#      Installed editors see the update only after the release is published.
+#
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   TAURI_SIGNING_PRIVATE_KEY           contents of the private key file
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD  its password
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build (e.g. v0.2.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - run: npm ci
+
+      - name: Version matches tag
+        run: node scripts/version.mjs check "${{ env.TAG }}"
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ env.TAG }}
+          releaseName: Taara Editor ${{ env.TAG }}
+          releaseBody: |
+            Download **Taara.Editor_*_x64-setup.exe** below and run it (no administrator rights needed).
+            Installed editors update themselves from this release once it is published.
+          releaseDraft: true
+          prerelease: false
+          includeUpdaterJson: true

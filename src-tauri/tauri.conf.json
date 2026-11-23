@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Taara Editor",
+  "version": "0.1.0",
+  "identifier": "com.taaramcu.editor",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Taara Editor",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 640,
+        "minHeight": 400,
+        "dragDropEnabled": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$APPLOCALDATA/extensions/**"]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IENDNThBQzlCMkM5OTU0NTgKUldSWVZKa3NtNnhZekFVc3UzSWVUQmVJZ3JKR2pRVDNoeDUyaHFrV05XQTZKYVd1czltNktyUWMK",
+      "endpoints": ["https://github.com/nghia12a1-t-ara/TaaraEditor/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": ["nsis"],
+    "publisher": "Taara MCU",
+    "shortDescription": "Lightweight code editor for embedded developers",
+    "category": "DeveloperTool",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      { "ext": ["vsix"], "name": "VSIX", "description": "VS Code Extension", "role": "Viewer" }
+    ],
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper" },
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false,
+        "languages": ["English"]
+      }
+    }
+  }
+}

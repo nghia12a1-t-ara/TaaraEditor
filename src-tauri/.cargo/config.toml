@@ -1,0 +1,6 @@
+# A global CC/CXX pointing at MinGW (e.g. from Qt) breaks C/C++ build scripts
+# for the MSVC target. Empty target-specific values make the `cc` crate fall
+# back to auto-detecting MSVC, without touching the machine-wide variables.
+[env]
+CC_x86_64_pc_windows_msvc = ""
+CXX_x86_64_pc_windows_msvc = ""

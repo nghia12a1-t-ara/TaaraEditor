@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taara Editor</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="menubar"></div>
+      <div id="workbench">
+        <nav id="activitybar"></nav>
+        <aside id="sidebar"><div id="sidebar-content"></div></aside>
+        <div class="sash" id="sidebar-sash"></div>
+        <main id="editor-area">
+          <div id="tabs"></div>
+          <div id="breadcrumb"></div>
+          <div id="editor-host"></div>
+          <div id="welcome"></div>
+          <div class="sash-h" id="panel-sash"></div>
+          <section id="panel"></section>
+        </main>
+        <div class="sash" id="outline-sash"></div>
+        <aside id="outline"></aside>
+      </div>
+      <footer id="statusbar"></footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
